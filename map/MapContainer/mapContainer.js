@@ -16,13 +16,14 @@ let plKonaweLayer;
 // Fungsi untuk menambahkan fitur koordinat kursor
 function addCursorCoordinates(map) {
   const coordinateDiv = document.createElement('div');
-  coordinateDiv.className = 'ol-mouse-position';
+  coordinateDiv.className = 'ol-coordinate-display';
   coordinateDiv.style.position = 'absolute';
-  coordinateDiv.style.bottom = '6px';
-  coordinateDiv.style.left = '38px';
-  //coordinateDiv.style.backgroundColor = 'rgba(255,255,255,0.7)';
-  coordinateDiv.style.padding = '2px 4px';
-  coordinateDiv.style.border = '1px solid #ccc';
+  coordinateDiv.style.top = 'auto';
+  coordinateDiv.style.bottom = '8px';
+  coordinateDiv.style.left = '10px';
+  coordinateDiv.style.backgroundColor = 'rgba(255,255,255,0.7)';
+  coordinateDiv.style.padding = '5px';
+  //coordinateDiv.style.border = '1px solid #ccc';
   coordinateDiv.style.borderRadius = '4px';
   coordinateDiv.style.fontSize = '12px';
 
@@ -427,6 +428,7 @@ export function initMap() {
   
   plKonaweLayer = new ol.layer.Tile({
     visible: false,
+    opacity: 0.7, // Set opacity to 0.5 for transparency
     source: new ol.source.TileWMS({
       url: 'http://geoserver.big.go.id/geoserver/diklat_tommy/wms',
       params: {
@@ -434,9 +436,7 @@ export function initMap() {
         'TILED': true,
         'SRS': 'EPSG:32751'
       },
-      serverType: 'geoserver',
-      opacity: 0.8,
-      zIndex: -1
+      serverType: 'geoserver'
     })
   });
 
@@ -487,7 +487,9 @@ export function initMap() {
       }),
       controls: [
         new ol.control.FullScreen(),
-        new ol.control.ScaleLine(),
+        new ol.control.ScaleLine(
+          {}
+        ),
         new ol.control.Zoom(),
         new ol.control.ZoomSlider(),
       ],
