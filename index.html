@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS Kebencanaan Konawe Kepulauan</title>
+    <link rel="icon" href="Lambang_Kabupaten_Konawe_Kepulauan.ico" type="image/x-icon">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- OpenLayers CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+<!-- Main CSS -->
+<link rel="stylesheet" href="main.css">
+    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="Lambang_Kabupaten_Konawe_Kepulauan.png" alt="Konawe Kepulauan Logo" class="me-3">
+            <div class="d-flex flex-column">
+                <span class="navbar-title-top lh-1">WebGIS Kebencanaan</span>
+                <span class="navbar-title-bottom lh-1">Konawe Kepulauan</span>
+            </div>
+        </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">
+                        <i class="bi bi-house-fill me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="peringatan-dini.html">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>Peringatan Dini
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="analisis-risiko.html">
+                        <i class="bi bi-geo-alt-fill me-1"></i>Analisis Risiko
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="kontak.html">
+                      <i class="bi bi-envelope-fill me-1"></i>Kontak
+                  </a>
+              </li>
+            </ul>
+                <div class="d-flex align-items-center">
+                    <span class="text-white me-3">Status Wilayah:</span>
+                    <span class="badge bg-warning text-dark">Waspada<span class="status-indicator"></span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Map Container -->
+    <div id="map-container">
+      <!-- Add this to your map container HTML -->
+    <div id="legend-container"></div>
+    </div>
+
+    <!-- Floating Menu -->
+<!-- Floating Menu -->
+<div class="floating-menu">
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#basemapModal">
+        <i class="bi bi-layers"></i>
+        <span>Basemap</span>
+    </button>
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#layersModal">
+        <i class="bi bi-stack"></i>
+        <span>Layers</span>
+    </button>
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#measurementModal">
+        <i class="bi bi-rulers"></i>
+        <span>Ukur</span>
+    </button>
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#bufferModal">
+        <i class="bi bi-bullseye"></i>
+        <span>Buffer</span>
+    </button>
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#downloadModal">
+        <i class="bi bi-download"></i>
+        <span>Download</span>
+    </button>
+    <button class="floating-menu-item" data-bs-toggle="modal" data-bs-target="#infoModal">
+        <i class="bi bi-info-circle"></i>
+        <span>Info</span>
+    </button>
+</div>
+
+<!-- Measurement Modal -->
+<div class="modal fade measurement-modal" id="measurementModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alat Pengukuran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-grid gap-2">
+                    <button data-tool="measure-distance" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-arrows-angle-expand"></i>
+                        Ukur Jarak
+                    </button>
+                    <button data-tool="measure-area" class="btn btn-success" data-bs-dismiss="modal">
+                        <i class="bi bi-bounding-box"></i>
+                        Ukur Area
+                    </button>
+                    <button data-tool="measure-stop" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i>
+                        Stop Pengukuran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Buffer Modal -->
+<div class="modal fade buffer-modal" id="bufferModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buffer Darurat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Radius Buffer (meters)</label>
+                    <input id="buffer-radius" type="range" class="form-range" min="1000" max="10000" step="1000"
+                        oninput="this.nextElementSibling.value = this.value + ' m'">
+                    <output>5000 m</output>
+                </div>
+                <div class="d-grid gap-2">
+                    <button data-tool="buffer-start" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-plus-circle"></i>
+                        Buat Buffer
+                    </button>
+                    <button data-tool="buffer-stop" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="bi bi-trash"></i>
+                        Hapus Buffer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Basemap Modal -->
+    <div class="modal fade" id="basemapModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Base Maps</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="basemap-list" class="list-group">
+                        <label class="list-group-item list-group-item-action">
+                            <input class="form-check-input me-1" type="radio" name="basemap" value="osm" checked>
+                            OpenStreetMap
+                        </label>
+                        <label class="list-group-item list-group-item-action">
+                            <input class="form-check-input me-1" type="radio" name="basemap" value="satellite">
+                            Satellite Imagery
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layers Modal -->
+    <div class="modal fade" id="layersModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Active Layers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="active-layers" class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Flood Risk Layer
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" checked>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Extreme Wave Risk Layer
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div class="modal fade" id="downloadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Download Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="unduhdata-list" class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-file-earmark-pdf me-2"></i> Flood Risk Report
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="bi bi-file-earmark-excel me-2"></i> Wave Risk Data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tentang WebGIS</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <p>WebGIS Kebencanaan Konawe Kepulauan</p>
+                  <p>Version: 1.0.0</p>
+                  <p>Dikembangkan dengan OpenLayers dan Bootstrap</p>
+                  <p>&copy; 2025 WebGIS Kebencanaan Konawe Kepulauan. Hak cipta dilindungi.</p>
+                  <p>Tim Pengembang:</p>
+                  <ul>
+                      <li>Dwi Wahyu Utomo - DPRWD</li>
+                      <li>Fajar Maulana - DSTIG</li>
+                      <li>Dwi Wahyu Utomo - DPRWD</li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- OpenLayers -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+    
+    <!-- Main Application Script -->
+    <script type="module" src="./main.js"></script>
+    <script type="module" src="./router.js"></script>
+</body>
+</html>
