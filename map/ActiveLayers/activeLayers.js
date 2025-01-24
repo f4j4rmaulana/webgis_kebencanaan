@@ -105,7 +105,7 @@ export function createLayerLegends() {
       ]
     },
     plKonaweLayer: {
-      title: 'PL (BIG)',
+      title: 'Penutup Lahan (BIG)',
       legendUrls: [
         {
           url: 'http://geoserver.big.go.id/geoserver/diklat_tommy/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=diklat_tommy:PL_KonaweKEP',

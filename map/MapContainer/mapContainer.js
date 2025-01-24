@@ -13,6 +13,30 @@ let kesehatanLayer;
 let batasAdminLayer;
 let plKonaweLayer;
 
+// Fungsi untuk menambahkan fitur koordinat kursor
+function addCursorCoordinates(map) {
+  const coordinateDiv = document.createElement('div');
+  coordinateDiv.className = 'ol-mouse-position';
+  coordinateDiv.style.position = 'absolute';
+  coordinateDiv.style.bottom = '6px';
+  coordinateDiv.style.left = '38px';
+  //coordinateDiv.style.backgroundColor = 'rgba(255,255,255,0.7)';
+  coordinateDiv.style.padding = '2px 4px';
+  coordinateDiv.style.border = '1px solid #ccc';
+  coordinateDiv.style.borderRadius = '4px';
+  coordinateDiv.style.fontSize = '12px';
+
+  map.on('pointermove', (event) => {
+    const coordinate = map.getEventCoordinate(event.originalEvent);
+    const projectedCoordinate = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+    const lon = projectedCoordinate[0].toFixed(6);
+    const lat = projectedCoordinate[1].toFixed(6);
+    coordinateDiv.textContent = `Lon: ${lon}°, Lat: ${lat}°`;
+  });
+
+  map.getViewport().appendChild(coordinateDiv);
+}
+
 function addMeasurementTool(map) {
   const source = new ol.source.Vector();
   const vectorLayer = new ol.layer.Vector({
@@ -411,7 +435,7 @@ export function initMap() {
         'SRS': 'EPSG:32751'
       },
       serverType: 'geoserver',
-      opacity: 0.5,
+      opacity: 0.8,
       zIndex: -1
     })
   });
@@ -601,6 +625,10 @@ export function initMap() {
    
    // Add location search specific to Konawe Kepulauan
    addLocationSearch(map);
+
+   // Tambahkan fitur koordinat kursor
+  addCursorCoordinates(map);
+
  
    // Return tools for external control
    return {
