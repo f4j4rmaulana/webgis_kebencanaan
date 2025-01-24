@@ -411,7 +411,8 @@ export function initMap() {
         'SRS': 'EPSG:32751'
       },
       serverType: 'geoserver',
-      opacity: 0.7
+      opacity: 0.5,
+      zIndex: -1
     })
   });
 
@@ -445,8 +446,9 @@ export function initMap() {
     // Initialize map
     map = new ol.Map({
       target: "map-container",
-      layers: [basemapOSM, basemapImagery, risikoLayer, gelombangLayer, transportasiLayer, 
-               perairanLayer, kesehatanLayer, batasAdminLayer, plKonaweLayer],
+      //urutan penutup lahan diatas agar posisi paling bawah layer
+      layers: [basemapOSM, basemapImagery, plKonaweLayer, risikoLayer, gelombangLayer, transportasiLayer, 
+               perairanLayer, kesehatanLayer, batasAdminLayer],
       overlays: [overlay],
       view: new ol.View({
         center: ol.proj.fromLonLat([123.08974139956345, -4.113873458353]),
